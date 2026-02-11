@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTM PR — The Next Level of Table Tennis in Puerto Rico</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Russo+One&family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        surface: { 900: '#060a14', 800: '#0b1120', 700: '#0f172a', 600: '#1a2340', 500: '#1e293b' },
+        accent: { cyan: '#00e5ff', purple: '#7c4dff', blue: '#0096ff' },
+        tt: { net: '#00e5ff', glow: 'rgba(0,229,255,0.15)' }
+      },
+      fontFamily: {
+        display: ['Orbitron', 'sans-serif'],
+        heading: ['Barlow Condensed', 'sans-serif'],
+        body: ['Barlow', 'sans-serif'],
+        brand: ['Russo One', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  /* === GLOBAL === */
+  html { font-family: 'Barlow', sans-serif; }
+  body { background: #060a14; color: #e2e8f0; overflow-x: hidden; }
+
+  /* === GRAIN OVERLAY === */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* === SCROLL ANIMATIONS === */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* === HERO ENTRANCE === */
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(60px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes heroLine {
+    from { width: 0; }
+    to { width: 80px; }
+  }
+  @keyframes heroPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .hero-animate { animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+  .hero-delay-1 { animation-delay: 0.2s; }
+  .hero-delay-2 { animation-delay: 0.4s; }
+  .hero-delay-3 { animation-delay: 0.6s; }
+  .hero-delay-4 { animation-delay: 0.8s; }
+  .hero-line { animation: heroLine 1s 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; width: 0; }
+  .hero-pulse { animation: heroPulse 2s 1.5s ease-in-out infinite; }
+
+  /* === GLOWING CARD BORDERS === */
+  .glow-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(11,17,32,0.9), rgba(15,23,42,0.9));
+    border: 1px solid rgba(0,229,255,0.08);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glow-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(0,229,255,0.0), rgba(124,77,255,0.0));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all 0.4s ease;
+    pointer-events: none;
+  }
+  .glow-card:hover {
+    border-color: rgba(0,229,255,0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,229,255,0.06), 0 0 0 1px rgba(0,229,255,0.1);
+  }
+  .glow-card:hover::before {
+    background: linear-gradient(135deg, rgba(0,229,255,0.3), rgba(124,77,255,0.3));
+  }
+
+  /* === BADGE === */
+  .dev-badge {
+    background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(124,77,255,0.12));
+    border: 1px solid rgba(0,229,255,0.25);
+    animation: badgePulse 3s ease-in-out infinite;
+  }
+  @keyframes badgePulse {
+    0%, 100% { border-color: rgba(0,229,255,0.25); }
+    50% { border-color: rgba(0,229,255,0.5); }
+  }
+
+  /* === GRADIENT TEXT === */
+  .gradient-text {
+    background: linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* === NAV === */
+  .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00e5ff, #7c4dff);
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link:hover::after { width: 100%; }
+  .nav-link:hover { color: #00e5ff; }
+
+  /* === HERO GRID BG === */
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* === CTA BUTTON === */
+  .cta-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #00e5ff, #7c4dff);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .cta-btn:hover::before { opacity: 1; }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,229,255,0.2); }
+  .cta-btn span { position: relative; z-index: 1; }
+
+  /* === MOBILE NAV === */
+  .mobile-menu {
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .mobile-menu.open { transform: translateX(0); }
+
+  /* === SECTION DIVIDER === */
+  .section-accent {
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #00e5ff, #7c4dff);
+    border-radius: 2px;
+  }
+
+  /* === FOUNDER CARD GLOW === */
+  .founder-glow {
+    box-shadow: 0 0 80px rgba(0,229,255,0.05), 0 0 160px rgba(124,77,255,0.03);
+  }
+
+  /* === FOOTER SOCIAL ICONS === */
+  .social-icon {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .social-icon:hover {
+    color: #00e5ff;
+    transform: translateY(-3px);
+  }
+
+  /* === SCROLL INDICATOR === */
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+  .scroll-indicator { animation: scrollBounce 2s ease-in-out infinite; }
+
+  /* === STAT COUNTER === */
+  .stat-number {
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+
+      <!-- LOGO -->
+      <a href="#" class="flex items-center gap-3 group">
+        <svg viewBox="0 0 480 130" xmlns="http://www.w3.org/2000/svg" class="h-8 w-auto">
+          <defs>
+            <linearGradient id="navAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#00e5ff" />
+              <stop offset="100%" style="stop-color:#7c4dff" />
+            </linearGradient>
+          </defs>
+          <rect x="10" y="28" width="80" height="12" rx="2" fill="#ffffff"/>
+          <rect x="39" y="28" width="14" height="90" rx="2" fill="#ffffff"/>
+          <rect x="100" y="28" width="80" height="12" rx="2" fill="#ffffff"/>
+          <rect x="129" y="28" width="14" height="90" rx="2" fill="#ffffff"/>
+          <rect x="93.5" y="22" width="3" height="24" rx="1.5" fill="url(#navAccent)"/>
+          <circle cx="95" cy="21" r="2.5" fill="url(#navAccent)"/>
+          <circle cx="243" cy="16" r="11" fill="#ffffff"/>
+          <path d="M 205,118 L 205,40 Q 205,28 215,28 L 222,28 L 243,85 L 264,28 L 271,28 Q 281,28 281,40 L 281,118 L 266,118 L 266,55 L 248,105 L 238,105 L 220,55 L 220,118 Z" fill="#ffffff"/>
+          <text x="310" y="104" font-family="Orbitron, sans-serif" font-weight="700" font-size="40" fill="url(#navAccent)" letter-spacing="5">PR</text>
+        </svg>
+      </a>
+
+      <!-- DESKTOP NAV -->
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#mission" class="nav-link font-heading text-sm font-500 tracking-[0.2em] uppercase text-gray-400">Mission</a>
+        <a href="#software" class="nav-link font-heading text-sm font-500 tracking-[0.2em] uppercase text-gray-400">Software</a>
+        <a href="#founder" class="nav-link font-heading text-sm font-500 tracking-[0.2em] uppercase text-gray-400">Founder</a>
+        <a href="#contact" class="nav-link font-heading text-sm font-500 tracking-[0.2em] uppercase text-gray-400">Contact</a>
+        <a href="#contact" class="cta-btn px-6 py-2.5 rounded border border-accent-cyan/30 font-heading text-xs font-600 tracking-[0.2em] uppercase text-white">
+          <span>Contact Us</span>
+        </a>
+      </div>
+
+      <!-- MOBILE HAMBURGER -->
+      <button class="md:hidden text-white p-2" onclick="toggleMobileMenu()" id="menuBtn">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu fixed inset-0 z-40 bg-surface-900/98 backdrop-blur-xl flex flex-col items-center justify-center gap-8" id="mobileMenu">
+  <button class="absolute top-6 right-6 text-white p-2" onclick="toggleMobileMenu()">
+    <i class="fa-solid fa-xmark text-2xl"></i>
+  </button>
+  <a href="#mission" onclick="toggleMobileMenu()" class="font-heading text-2xl font-600 tracking-[0.3em] uppercase text-gray-300 hover:text-accent-cyan transition-colors">Mission</a>
+  <a href="#software" onclick="toggleMobileMenu()" class="font-heading text-2xl font-600 tracking-[0.3em] uppercase text-gray-300 hover:text-accent-cyan transition-colors">Technology</a>
+  <a href="#founder" onclick="toggleMobileMenu()" class="font-heading text-2xl font-600 tracking-[0.3em] uppercase text-gray-300 hover:text-accent-cyan transition-colors">Founder</a>
+  <a href="#contact" onclick="toggleMobileMenu()" class="font-heading text-2xl font-600 tracking-[0.3em] uppercase text-gray-300 hover:text-accent-cyan transition-colors">Contact</a>
+</div>
+
+
+<!-- ===================== HERO ===================== -->
+<section class="relative min-h-screen flex items-center justify-center hero-grid overflow-hidden">
+
+  <!-- Radial glow -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full" style="background: radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, rgba(124,77,255,0.03) 40%, transparent 70%);"></div>
+
+  <!-- Corner accents -->
+  <div class="absolute top-20 left-8 w-px h-24 bg-gradient-to-b from-accent-cyan/30 to-transparent"></div>
+  <div class="absolute top-20 left-8 w-24 h-px bg-gradient-to-r from-accent-cyan/30 to-transparent"></div>
+  <div class="absolute bottom-8 right-8 w-px h-24 bg-gradient-to-t from-accent-purple/30 to-transparent"></div>
+  <div class="absolute bottom-8 right-8 w-24 h-px bg-gradient-to-l from-accent-purple/30 to-transparent"></div>
+
+  <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+
+    <!-- Eyebrow -->
+    <div class="hero-animate hero-delay-1 flex items-center justify-center gap-3 mb-8">
+      <div class="w-8 h-px bg-accent-cyan/50"></div>
+      <span class="font-heading text-xs font-500 tracking-[0.4em] uppercase text-accent-cyan/70">Puerto Rico</span>
+      <div class="w-8 h-px bg-accent-cyan/50"></div>
+    </div>
+
+    <!-- Main headline -->
+    <h1 class="hero-animate hero-delay-2 font-heading font-900 uppercase leading-[0.9] tracking-tight mb-6">
+      <span class="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white">The Next Level</span>
+      <span class="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white/20 mt-1">of Table Tennis in</span>
+      <span class="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl gradient-text mt-1">Puerto Rico</span>
+    </h1>
+
+    <!-- Accent line -->
+    <div class="flex justify-center my-8">
+      <div class="hero-line h-[2px] bg-gradient-to-r from-accent-cyan to-accent-purple rounded-full"></div>
+    </div>
+
+    <!-- Subheadline -->
+    <p class="hero-animate hero-delay-3 font-body text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+      Professional tournament organization powered by proprietary technology. Elevating competitive table tennis with precision management and digital-first infrastructure.
+    </p>
+
+    <!-- CTA -->
+    <div class="hero-animate hero-delay-4 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="#mission" class="cta-btn px-8 py-3.5 rounded border border-accent-cyan/40 font-heading text-sm font-600 tracking-[0.15em] uppercase text-white">
+        <span>Explore Our Mission</span>
+      </a>
+      <a href="#software" class="px-8 py-3.5 rounded font-heading text-sm font-500 tracking-[0.15em] uppercase text-gray-500 hover:text-accent-cyan transition-colors">
+        View Technology →
+      </a>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 scroll-indicator">
+      <div class="w-6 h-10 rounded-full border border-gray-700 flex items-start justify-center p-1.5">
+        <div class="w-1 h-2.5 rounded-full bg-accent-cyan/60"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ===================== MISSION / ABOUT ===================== -->
+<section id="mission" class="relative py-24 md:py-32">
+  <!-- BG glow -->
+  <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full" style="background: radial-gradient(ellipse, rgba(124,77,255,0.04) 0%, transparent 60%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- Section header -->
+    <div class="reveal mb-16 md:mb-20">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="section-accent"></div>
+        <span class="font-heading text-xs font-500 tracking-[0.3em] uppercase text-accent-cyan/70">About Us</span>
+      </div>
+      <h2 class="font-heading font-800 text-4xl md:text-5xl lg:text-6xl uppercase tracking-tight text-white">
+        Mission &amp; <span class="gradient-text">Strategy</span>
+      </h2>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+
+      <!-- Mission card -->
+      <div class="reveal glow-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-accent-cyan/10 flex items-center justify-center">
+            <i class="fa-solid fa-crosshairs text-accent-cyan text-sm"></i>
+          </div>
+          <h3 class="font-heading font-700 text-xl tracking-wide uppercase text-white">Our Mission</h3>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed">
+          To revolutionize competitive table tennis in Puerto Rico through professional-grade tournament management, cutting-edge technology integration, and unwavering commitment to ITTF standards — giving every player, league, and event the visibility and operational excellence they deserve.
+        </p>
+      </div>
+
+      <!-- Strategy card -->
+      <div class="reveal reveal-delay-1 glow-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center">
+            <i class="fa-solid fa-route text-accent-purple text-sm"></i>
+          </div>
+          <h3 class="font-heading font-700 text-xl tracking-wide uppercase text-white">Our Strategy</h3>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed">
+          Leverage proprietary software and data-driven operations to deliver seamless tournament experiences. From automated seeding and bracket generation to real-time digital results through platforms like StadiumCompete, we bridge the gap between grassroots competition and world-class event production.
+        </p>
+      </div>
+
+      <!-- Vision card -->
+      <div class="reveal reveal-delay-2 glow-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-accent-cyan/10 flex items-center justify-center">
+            <i class="fa-solid fa-eye text-accent-cyan text-sm"></i>
+          </div>
+          <h3 class="font-heading font-700 text-xl tracking-wide uppercase text-white">Our Vision</h3>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed">
+          Position Puerto Rico as a premier destination for competitive table tennis in the Caribbean — building a sustainable ecosystem where players develop, sponsors engage, and the sport grows through technology-enhanced transparency and professionalism.
+        </p>
+      </div>
+
+      <!-- Values card -->
+      <div class="reveal reveal-delay-3 glow-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center">
+            <i class="fa-solid fa-diamond text-accent-purple text-sm"></i>
+          </div>
+          <h3 class="font-heading font-700 text-xl tracking-wide uppercase text-white">Our Values</h3>
+        </div>
+        <ul class="font-body text-gray-400 leading-relaxed space-y-2">
+          <li class="flex items-start gap-2"><span class="text-accent-cyan mt-1.5 text-[8px]">◆</span> Operational excellence under international standards</li>
+          <li class="flex items-start gap-2"><span class="text-accent-cyan mt-1.5 text-[8px]">◆</span> Technology as a competitive advantage, not a gimmick</li>
+          <li class="flex items-start gap-2"><span class="text-accent-cyan mt-1.5 text-[8px]">◆</span> Player-first experiences at every touchpoint</li>
+          <li class="flex items-start gap-2"><span class="text-accent-cyan mt-1.5 text-[8px]">◆</span> Transparent, data-driven decision making</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== SOFTWARE ===================== -->
+<section id="software" class="relative py-24 md:py-32 border-t border-white/[0.04]">
+  <!-- BG glow -->
+  <div class="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full" style="background: radial-gradient(ellipse, rgba(0,229,255,0.04) 0%, transparent 60%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- Section header -->
+    <div class="reveal mb-16 md:mb-20">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="section-accent"></div>
+        <span class="font-heading text-xs font-500 tracking-[0.3em] uppercase text-accent-cyan/70">Technology</span>
+      </div>
+      <h2 class="font-heading font-800 text-4xl md:text-5xl lg:text-6xl uppercase tracking-tight text-white">
+        Software &amp; <span class="gradient-text">Technology</span>
+      </h2>
+      <p class="font-body text-gray-500 text-lg mt-4 max-w-2xl">
+        A combination of proprietary tools and best-in-class third-party platforms powering professional table tennis operations.
+      </p>
+    </div>
+
+    <!-- Software cards -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+      <!-- Kileaaa -->
+      <div class="reveal glow-card rounded-2xl p-8 md:p-10 lg:col-span-2">
+        <div class="flex items-start justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-purple/20 flex items-center justify-center border border-accent-cyan/10">
+              <i class="fa-solid fa-code text-accent-cyan"></i>
+            </div>
+            <div>
+              <h3 class="font-display text-lg font-700 tracking-wider text-white">KILEAAA</h3>
+              <p class="font-body text-xs text-gray-500">Proprietary Platform — Built In-House</p>
+            </div>
+          </div>
+          <span class="dev-badge px-3 py-1 rounded-full font-heading text-[10px] font-600 tracking-[0.15em] uppercase text-accent-cyan">In Development</span>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed mb-6">
+          Our only proprietary software — a comprehensive tournament and league management platform purpose-built for table tennis by TTM PR. From player registration and seeding algorithms to live scoring and result publication, Kileaaa is designed to handle every operational layer of competitive play under one roof.
+        </p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white/[0.02] rounded-lg px-4 py-3 border border-white/[0.04]">
+            <span class="font-heading text-[10px] tracking-[0.2em] uppercase text-gray-500">Feature</span>
+            <p class="font-body text-sm text-gray-300 mt-1">Automated Bracket Generation</p>
+          </div>
+          <div class="bg-white/[0.02] rounded-lg px-4 py-3 border border-white/[0.04]">
+            <span class="font-heading text-[10px] tracking-[0.2em] uppercase text-gray-500">Feature</span>
+            <p class="font-body text-sm text-gray-300 mt-1">Real-Time Score Tracking</p>
+          </div>
+          <div class="bg-white/[0.02] rounded-lg px-4 py-3 border border-white/[0.04]">
+            <span class="font-heading text-[10px] tracking-[0.2em] uppercase text-gray-500">Feature</span>
+            <p class="font-body text-sm text-gray-300 mt-1">Player Profiles &amp; Rankings</p>
+          </div>
+          <div class="bg-white/[0.02] rounded-lg px-4 py-3 border border-white/[0.04]">
+            <span class="font-heading text-[10px] tracking-[0.2em] uppercase text-gray-500">Feature</span>
+            <p class="font-body text-sm text-gray-300 mt-1">Sponsorship Integration</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fogueo -->
+      <div class="reveal reveal-delay-1 glow-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-start justify-between mb-6 flex-wrap gap-2">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center border border-orange-500/10">
+              <i class="fa-solid fa-fire text-orange-400"></i>
+            </div>
+            <div>
+              <h3 class="font-display text-base font-700 tracking-wider text-white">FOGUEO</h3>
+              <p class="font-body text-xs text-gray-500">Full Table Tennis League</p>
+            </div>
+          </div>
+          <span class="dev-badge px-3 py-1 rounded-full font-heading text-[10px] font-600 tracking-[0.15em] uppercase text-accent-cyan">Active</span>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed mb-6">
+          Our proprietary league format that brings consistent, structured competitive play to Puerto Rico's table tennis community. Powered by TTM PR's operational backbone and digital infrastructure.
+        </p>
+        <div class="bg-white/[0.02] rounded-lg px-4 py-3 border border-white/[0.04]">
+          <span class="font-heading text-[10px] tracking-[0.2em] uppercase text-gray-500">Status</span>
+          <p class="font-body text-sm text-gray-300 mt-1">Season operations active</p>
+        </div>
+      </div>
+
+      <!-- Third-Party Platforms -->
+      <div class="reveal reveal-delay-2 glow-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-start justify-between mb-6 flex-wrap gap-2">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-blue-500/20 flex items-center justify-center border border-accent-cyan/10">
+              <i class="fa-solid fa-cubes text-accent-blue"></i>
+            </div>
+            <div>
+              <h3 class="font-heading text-base font-700 tracking-wider uppercase text-white">Third-Party Tools</h3>
+              <p class="font-body text-xs text-gray-500">External Platforms We Use</p>
+            </div>
+          </div>
+          <span class="dev-badge px-3 py-1 rounded-full font-heading text-[10px] font-600 tracking-[0.15em] uppercase text-accent-cyan">Active</span>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed">
+          We leverage best-in-class third-party software to complement our proprietary tools — including platforms for event coordination, bracket management, communications, and design — selecting the right tool for each operational need.
+        </p>
+      </div>
+
+      <!-- StadiumCompete Integration -->
+      <div class="reveal reveal-delay-3 glow-card rounded-2xl p-8 md:p-10 lg:col-span-2">
+        <div class="flex items-start justify-between mb-6 flex-wrap gap-2">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center border border-green-500/10">
+              <i class="fa-solid fa-plug text-green-400"></i>
+            </div>
+            <div>
+              <h3 class="font-heading text-base font-700 tracking-wider uppercase text-white">Platform Integrations</h3>
+              <p class="font-body text-xs text-gray-500">StadiumCompete &amp; Beyond</p>
+            </div>
+          </div>
+          <span class="dev-badge px-3 py-1 rounded-full font-heading text-[10px] font-600 tracking-[0.15em] uppercase text-accent-cyan">Live</span>
+        </div>
+        <p class="font-body text-gray-400 leading-relaxed">
+          Digital result publication through StadiumCompete, providing real-time access to match results, standings, and player statistics. Our integration layer ensures that every match played under TTM PR management is immediately accessible to players, coaches, and fans.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== FOUNDER ===================== -->
+<section id="founder" class="relative py-24 md:py-32 border-t border-white/[0.04]">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full" style="background: radial-gradient(ellipse, rgba(0,229,255,0.03) 0%, transparent 60%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- Section header -->
+    <div class="reveal mb-16 md:mb-20">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="section-accent"></div>
+        <span class="font-heading text-xs font-500 tracking-[0.3em] uppercase text-accent-cyan/70">Leadership</span>
+      </div>
+      <h2 class="font-heading font-800 text-4xl md:text-5xl lg:text-6xl uppercase tracking-tight text-white">
+        The <span class="gradient-text">Founder</span>
+      </h2>
+    </div>
+
+    <!-- Founder card -->
+    <div class="reveal max-w-3xl">
+      <div class="glow-card founder-glow rounded-2xl p-8 md:p-12">
+        <div class="flex flex-col sm:flex-row items-start gap-8">
+
+          <!-- Avatar placeholder -->
+          <div class="flex-shrink-0">
+            <div class="w-28 h-28 rounded-2xl bg-gradient-to-br from-surface-600 to-surface-700 border border-white/[0.06] flex items-center justify-center">
+              <div class="text-center">
+                <i class="fa-solid fa-user text-2xl text-gray-600 mb-1"></i>
+                <div class="font-heading text-[8px] tracking-[0.2em] uppercase text-gray-600">Photo</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-1">
+              <h3 class="font-heading font-800 text-2xl uppercase tracking-wide text-white">Joel Vega</h3>
+              <span class="dev-badge px-2.5 py-0.5 rounded-full font-heading text-[9px] font-600 tracking-[0.15em] uppercase text-accent-cyan">Founder</span>
+            </div>
+            <p class="font-heading text-sm tracking-wider uppercase text-accent-cyan/70 mb-4">Director Técnico &amp; Table Tennis Enthusiast</p>
+
+            <p class="font-body text-gray-400 leading-relaxed mb-4">
+              Table tennis enthusiast with over 15 years of experience in the sport. Since 2026, Joel serves as Director Técnico of the Federación Puertorriqueña de Tenis de Mesa (FPRTM) and Director Técnico of the Liga Atlética Interuniversitaria (LAI) table tennis program.
+            </p>
+            <p class="font-body text-gray-400 leading-relaxed">
+              Professionally, Joel is an Executive Recruiter with an MBA and over 8 years of experience helping organizations — from startups to Fortune 500 companies — scale their personnel operations. He brings that same strategic and operational mindset to the world of competitive table tennis management.
+            </p>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mt-6">
+              <span class="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] font-heading text-[10px] tracking-[0.15em] uppercase text-gray-500">FPRTM Director Técnico</span>
+              <span class="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] font-heading text-[10px] tracking-[0.15em] uppercase text-gray-500">LAI Director Técnico</span>
+              <span class="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] font-heading text-[10px] tracking-[0.15em] uppercase text-gray-500">MBA</span>
+              <span class="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] font-heading text-[10px] tracking-[0.15em] uppercase text-gray-500">Executive Recruiter</span>
+              <span class="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] font-heading text-[10px] tracking-[0.15em] uppercase text-gray-500">15+ Years in TT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== CONTACT / FOOTER ===================== -->
+<footer id="contact" class="relative border-t border-white/[0.04]">
+
+  <!-- Main footer content -->
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-20 md:py-24">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+
+      <!-- Brand column -->
+      <div class="lg:col-span-2">
+        <svg viewBox="0 0 480 130" xmlns="http://www.w3.org/2000/svg" class="h-7 w-auto mb-6">
+          <defs>
+            <linearGradient id="ftAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#00e5ff" />
+              <stop offset="100%" style="stop-color:#7c4dff" />
+            </linearGradient>
+          </defs>
+          <rect x="10" y="28" width="80" height="12" rx="2" fill="#ffffff"/>
+          <rect x="39" y="28" width="14" height="90" rx="2" fill="#ffffff"/>
+          <rect x="100" y="28" width="80" height="12" rx="2" fill="#ffffff"/>
+          <rect x="129" y="28" width="14" height="90" rx="2" fill="#ffffff"/>
+          <rect x="93.5" y="22" width="3" height="24" rx="1.5" fill="url(#ftAccent)"/>
+          <circle cx="95" cy="21" r="2.5" fill="url(#ftAccent)"/>
+          <circle cx="243" cy="16" r="11" fill="#ffffff"/>
+          <path d="M 205,118 L 205,40 Q 205,28 215,28 L 222,28 L 243,85 L 264,28 L 271,28 Q 281,28 281,40 L 281,118 L 266,118 L 266,55 L 248,105 L 238,105 L 220,55 L 220,118 Z" fill="#ffffff"/>
+          <text x="310" y="104" font-family="Orbitron, sans-serif" font-weight="700" font-size="40" fill="url(#ftAccent)" letter-spacing="5">PR</text>
+        </svg>
+        <p class="font-body text-gray-500 leading-relaxed max-w-md">
+          Tournament &amp; Technology Management. Elevating competitive table tennis in Puerto Rico through professional operations and proprietary technology.
+        </p>
+
+        <!-- Social -->
+        <div class="flex items-center gap-5 mt-8">
+          <a href="#" class="social-icon text-gray-600 text-lg"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-icon text-gray-600 text-lg"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-icon text-gray-600 text-lg"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="social-icon text-gray-600 text-lg"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" class="social-icon text-gray-600 text-lg"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="font-heading text-xs font-600 tracking-[0.3em] uppercase text-gray-400 mb-6">Contact</h4>
+        <div class="space-y-4">
+          <a href="mailto:contact@ttmpr.com" class="flex items-center gap-3 group">
+            <i class="fa-solid fa-envelope text-xs text-gray-600 group-hover:text-accent-cyan transition-colors"></i>
+            <span class="font-body text-sm text-gray-500 group-hover:text-gray-300 transition-colors">contact@ttmpr.com</span>
+          </a>
+          <a href="tel:+17870000000" class="flex items-center gap-3 group">
+            <i class="fa-solid fa-phone text-xs text-gray-600 group-hover:text-accent-cyan transition-colors"></i>
+            <span class="font-body text-sm text-gray-500 group-hover:text-gray-300 transition-colors">(787) 000-0000</span>
+          </a>
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-location-dot text-xs text-gray-600"></i>
+            <span class="font-body text-sm text-gray-500">Puerto Rico</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <h4 class="font-heading text-xs font-600 tracking-[0.3em] uppercase text-gray-400 mb-6">Navigate</h4>
+        <div class="space-y-3">
+          <a href="#mission" class="block font-body text-sm text-gray-500 hover:text-accent-cyan transition-colors">Mission</a>
+          <a href="#software" class="block font-body text-sm text-gray-500 hover:text-accent-cyan transition-colors">Software</a>
+          <a href="#founder" class="block font-body text-sm text-gray-500 hover:text-accent-cyan transition-colors">Founder</a>
+          <a href="#contact" class="block font-body text-sm text-gray-500 hover:text-accent-cyan transition-colors">Contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-white/[0.04]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="font-body text-xs text-gray-600">&copy; 2026 TTM PR. All rights reserved.</p>
+      <p class="font-body text-xs text-gray-700">Tournament &amp; Technology Management — Puerto Rico</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ===================== SCRIPTS ===================== -->
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Navbar background on scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 80) {
+    navbar.style.background = 'rgba(6,10,20,0.85)';
+    navbar.style.backdropFilter = 'blur(20px)';
+    navbar.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+  } else {
+    navbar.style.background = 'transparent';
+    navbar.style.backdropFilter = 'none';
+    navbar.style.borderBottom = 'none';
+  }
+});
+
+// Mobile menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
