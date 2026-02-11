@@ -578,8 +578,11 @@ tailwind.config = {
 
           <!-- Founder photo -->
           <div class="flex-shrink-0">
-            <div class="w-28 h-28 rounded-2xl border border-white/[0.06] overflow-hidden">
-              <img src="images/joel-vega.jpg" alt="Joel Vega" class="w-full h-full object-cover" />
+            <div class="w-28 h-28 rounded-2xl border border-white/[0.06] overflow-hidden relative" style="background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(124,77,255,0.15));">
+              <img src="images/joel-vega.jpg" alt="Joel Vega" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="absolute inset-0 items-center justify-center" style="display:none;">
+                <span class="font-heading font-800 text-3xl tracking-wider text-white/80">JV</span>
+              </div>
             </div>
           </div>
 
