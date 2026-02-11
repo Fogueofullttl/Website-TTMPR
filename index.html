@@ -578,8 +578,11 @@ tailwind.config = {
 
           <!-- Founder photo -->
           <div class="flex-shrink-0">
-            <div class="w-28 h-28 rounded-2xl border border-white/[0.06] overflow-hidden">
-              <img src="images/joel-vega.jpg" alt="Joel Vega" class="w-full h-full object-cover" />
+            <div class="w-28 h-28 rounded-2xl border border-white/[0.06] overflow-hidden relative" style="background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(124,77,255,0.15));">
+              <img src="images/joel-vega.jpg" alt="Joel Vega" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="absolute inset-0 items-center justify-center" style="display:none;">
+                <span class="font-heading font-800 text-3xl tracking-wider text-white/80">JV</span>
+              </div>
             </div>
           </div>
 
@@ -658,9 +661,9 @@ tailwind.config = {
       <div>
         <h4 class="font-heading text-xs font-600 tracking-[0.3em] uppercase text-gray-400 mb-6" data-i18n="nav_contact">Contact</h4>
         <div class="space-y-4">
-          <a href="mailto:contact@ttmpr.com" class="flex items-center gap-3 group">
+          <a href="mailto:joel@ttmpr.xyz" class="flex items-center gap-3 group">
             <i class="fa-solid fa-envelope text-xs text-gray-600 group-hover:text-accent-cyan transition-colors"></i>
-            <span class="font-body text-sm text-gray-500 group-hover:text-gray-300 transition-colors">contact@ttmpr.com</span>
+            <span class="font-body text-sm text-gray-500 group-hover:text-gray-300 transition-colors">joel@ttmpr.xyz</span>
           </a>
           <a href="tel:+17872483994" class="flex items-center gap-3 group">
             <i class="fa-solid fa-phone text-xs text-gray-600 group-hover:text-accent-cyan transition-colors"></i>
